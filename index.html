@@ -6,22 +6,25 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div id="highScore">High Score</div>
+    <div class="header">
+        <!-- <div id="highScore">High Score</div> -->
         <h1>Covid-19 Quiz</h1>
         <table id="timer" style="visibility: hidden;">
             <tr>
-                <td>Time left (Quiz)</td>
+                <td>Time left : </td>
                 <td><span id="quizTimer"></span></td>
             </tr>
             <tr>
-                <td>Time left (Question)</td>
-                <td><span id="questionTimer"></span></td>
+                <td>Score : </td>
+                <td><span id="score"></span></td>
             </tr>
         </table>
-    </nav>
+    </div>
     <div class="container">
         <section id="quiz"></section>
+        <div class="response" style="visibility: hidden;">
+            <p>Your Response : <span id="userResponse"></span></p>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

@@ -107,10 +107,12 @@ var questions = [
 ];
 
 var score = 0;
-var quizObject = {};
 var quizDuration = 0;
 var quizSecondElapsed = 0;
 var quizInterval;
+var questionDuration = 15;
+var questionSecondElapsed = 0;
+var questionInterval;
 var currentQuestion = 0;
 var username;
 var highScore = document.getElementById("highScore");
@@ -157,6 +159,9 @@ function reset() {
     quizDuration = 0;
     quizSecondElapsed = 0;
     currentQuestion = 0;
+    questionDuration = 15;
+    questionSecondElapsed = 0;
+    questionInterval;
     for(let i = 0; i < questions.length; i++){
         questions[i].marked = false;
     }
@@ -177,14 +182,14 @@ function rQuestions(arr) {
     var randomQuestions = [];
     var result = [], randNumber,Count=questions.length;
     while ( Count > 0) {
-        randNumber = Math.round(1 + Math.random() * (questions.length));
+        randNumber = Math.round(Math.random() * (questions.length - 1));
         if (result.indexOf(randNumber) == -1) {
             result.push(randNumber);
             Count--;
         }
     }
     for(let i = 0; i < questions.length; i++) {
-        randomQuestions[i] = arr[result[i] - 1];
+        randomQuestions[i] = arr[result[i]];
     }
     return randomQuestions
 }
@@ -194,6 +199,7 @@ function startTimer() {
     quizSeconds = quizDuration;
     quizInterval = setInterval(function() {
         quizSecondElapsed++;
+        questionSecondElapsed++;
         time();
     }, 1000);
 }
@@ -207,6 +213,7 @@ function time() {
 
 function showQuestion(i, randomQuestions) {
     clear();
+    questionSecondElapsed = 0;
     if(i == randomQuestions.length){
         endQuiz();
         return;
@@ -272,7 +279,11 @@ function scoreAnswer(current) {
     if(e.matches("li") && !current.marked){
         let selectedItem = e.textContent;
         if(selectedItem == current.answer){
-            score++;
+            if(questionDuration < questionSecondElapsed + 1){
+                score += 0;
+            }else{
+                score += questionDuration - questionSecondElapsed;
+            }
             document.getElementById("score").textContent = score;
             current.correct = true;
             document.getElementById("userResponse").textContent = "Correct";

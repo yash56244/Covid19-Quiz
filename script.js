@@ -146,12 +146,37 @@ function init() {
     quiz.appendChild(startQuiz);
     startQuiz.addEventListener("click", function(){
         username = nameInput.value;
-        startquiz();
+        var randomQuestions = rQuestions(questions);
+        sidebar(randomQuestions);
+        startquiz(randomQuestions);
     })
 }
 
 function clear() {
     quiz.innerHTML = "";
+}
+
+function sidebar(randomQuestions) {
+    var side = document.getElementById("sidebar");
+    side.style.visibility = "visible";
+    for(let i = 0; i < questions.length; i++){
+        let sideQuestion = document.createElement("li");
+        sideQuestion.setAttribute("id", i + 1);
+        sideQuestion.setAttribute("style", "list-style-type:none");
+        sideQuestion.textContent = i + 1;
+        side.appendChild(sideQuestion);
+    }
+    side.addEventListener("click", function() {
+        toggleSidebar(randomQuestions);
+    })
+}
+
+function toggleSidebar(randomQuestions) {
+    let e = event.target;
+    if(e.matches("li")){
+        let questionno = e.textContent;
+        showQuestion(Number(questionno) - 1, randomQuestions);
+    }
 }
 
 function reset() {
@@ -168,13 +193,12 @@ function reset() {
     quizInterval;
 }
 
-function startquiz(){
+function startquiz(randomQuestions){
     timerTable.style.visibility = "visible";
     quizDuration = questions.length * 10;
     startTimer();
     time();
     resp.style.visibility = "visible";
-    var randomQuestions = rQuestions(questions);
     showQuestion(currentQuestion, randomQuestions);
 }
 
@@ -190,8 +214,9 @@ function rQuestions(arr) {
     }
     for(let i = 0; i < questions.length; i++) {
         randomQuestions[i] = arr[result[i]];
+        randomQuestions[i].number = i + 1;
     }
-    return randomQuestions
+    return randomQuestions;
 }
 
 function startTimer() {
@@ -214,6 +239,7 @@ function time() {
 function showQuestion(i, randomQuestions) {
     clear();
     questionSecondElapsed = 0;
+    currentQuestion = i;
     if(i == randomQuestions.length){
         endQuiz();
         return;
@@ -265,12 +291,12 @@ function showQuestion(i, randomQuestions) {
     }
     quiz.appendChild(next);
     previous.addEventListener("click", function () {
-        showQuestion(currentQuestion - 1, randomQuestions);
         currentQuestion--;
+        showQuestion(currentQuestion, randomQuestions);
     })
     next.addEventListener("click", function(){
-        showQuestion(currentQuestion + 1, randomQuestions);
         currentQuestion++;
+        showQuestion(currentQuestion, randomQuestions);
     })
 }
 
@@ -287,9 +313,11 @@ function scoreAnswer(current) {
             document.getElementById("score").textContent = score;
             current.correct = true;
             document.getElementById("userResponse").textContent = "Correct";
+            document.getElementById(current.number).style.backgroundColor = "green";
         }
         else{
             document.getElementById("userResponse").textContent = "InCorrect";
+            document.getElementById(current.number).style.backgroundColor = "red";
         }
         current.marked = true;
         showAnswer(current);
@@ -306,17 +334,24 @@ function showAnswer(current) {
     }
 }
 
+function refresh() {
+    console.log("saf")
+    location.reload();
+}
+
 function endQuiz(){
     stopTimer();
     clear();
     timerTable.style.visibility = "hidden";
     resp.style.visibility = "hidden";
+    var sidebar = document.getElementById("sidebar");
+    sidebar.style.display = "none";
     let heading = document.createElement("p");
     heading.setAttribute("id", "heading");
     heading.textContent = "Quiz Over!";
     let instructions = document.createElement("p");
     instructions.setAttribute("id", "instructions");
-    instructions.textContent = "Your Score is " + score;
+    instructions.textContent = "Hey! " + username + " Your Score is " + score;
     let playAgain = document.createElement("button");
     playAgain.setAttribute("id", "startQuiz");
     playAgain.textContent = "Play again";
@@ -340,8 +375,24 @@ function endQuiz(){
         storedScores.push(thisScore[0]);
     }
     localStorage.setItem("quizScores", JSON.stringify(storedScores));
-    highScores();
-    playAgain.addEventListener("click", init);
+    let heading2 = document.createElement("h2");
+    heading2.setAttribute("id", "heading");
+    heading2.textContent = "Top 5 High Scores";
+    quiz.appendChild(heading2);
+    if(storedScores != null){
+        storedScores.sort((a, b) => (a.score < b.score) ? 1: -1);
+        let scoresToDisplay = 5;
+        if(storedScores.length < 5){
+            scoresToDisplay = storedScores.length;
+        }
+        for(let i = 0; i < scoresToDisplay; i++){
+            var s = storedScores[i];
+            var p = document.createElement("p");
+            p.textContent = s.score + " by " + s.username + " on " + s.date +  " at " + s.time;
+            quiz.appendChild(p);
+        }
+    }
+    playAgain.addEventListener("click", refresh);
 }
 
 function stopTimer() {
@@ -379,7 +430,7 @@ function highScores() {
     playAgain.setAttribute("id", "startQuiz");
     playAgain.textContent = "Play Quiz!";
     quiz.appendChild(playAgain);
-    playAgain.addEventListener("click", init);
+    playAgain.addEventListener("click", refresh);
 }
 
 init();

@@ -144,7 +144,7 @@ function init() {
     quiz.appendChild(startQuiz);
     startQuiz.addEventListener("click", function(){
         username = nameInput.value;
-        startquiz(questions);
+        startquiz();
     })
 }
 
@@ -163,13 +163,30 @@ function reset() {
     quizInterval;
 }
 
-function startquiz(questions){
+function startquiz(){
     timerTable.style.visibility = "visible";
     quizDuration = questions.length * 10;
     startTimer();
     time();
     resp.style.visibility = "visible";
-    showQuestion(currentQuestion);
+    var randomQuestions = rQuestions(questions);
+    showQuestion(currentQuestion, randomQuestions);
+}
+
+function rQuestions(arr) {
+    var randomQuestions = [];
+    var result = [], randNumber,Count=questions.length;
+    while ( Count > 0) {
+        randNumber = Math.round(1 + Math.random() * (questions.length));
+        if (result.indexOf(randNumber) == -1) {
+            result.push(randNumber);
+            Count--;
+        }
+    }
+    for(let i = 0; i < questions.length; i++) {
+        randomQuestions[i] = arr[result[i] - 1];
+    }
+    return randomQuestions
 }
 
 function startTimer() {
@@ -188,14 +205,14 @@ function time() {
     }
 }
 
-function showQuestion(i) {
+function showQuestion(i, randomQuestions) {
     clear();
-    if(i == questions.length){
+    if(i == randomQuestions.length){
         endQuiz();
         return;
     }
-    if(questions[i].marked){
-        if(questions[i].correct){
+    if(randomQuestions[i].marked){
+        if(randomQuestions[i].correct){
             document.getElementById("userResponse").textContent = "Correct";
         }else{
             document.getElementById("userResponse").textContent = "InCorrect";
@@ -205,25 +222,25 @@ function showQuestion(i) {
         document.getElementById("userResponse").textContent = "Not Answered";
     }
     let question = document.createElement("h1");
-    question.setAttribute("question", questions[i].question);
-    question.textContent = questions[i].question;
+    question.setAttribute("question", randomQuestions[i].question);
+    question.textContent = randomQuestions[i].question;
     quiz.appendChild(question);
     let choicebox = document.createElement("ul");
     choicebox.setAttribute("id", "choicebox");
     quiz.append(choicebox);
-    for(let j = 0; j < questions[i].choices.length; j++){
+    for(let j = 0; j < randomQuestions[i].choices.length; j++){
         let listchoice = document.createElement("li");
-        listchoice.setAttribute("choice-value", questions[i].choices[j]);
+        listchoice.setAttribute("choice-value", randomQuestions[i].choices[j]);
         listchoice.setAttribute("id","questionNum-" + j);
         listchoice.setAttribute("style", "list-style-type:none");
-        listchoice.textContent = questions[i].choices[j];
-        if(questions[i].marked && questions[i].answer == questions[i].choices[j]){
+        listchoice.textContent = randomQuestions[i].choices[j];
+        if(randomQuestions[i].marked && randomQuestions[i].answer == randomQuestions[i].choices[j]){
             listchoice.setAttribute("style", "background-color: green; color: white");
         }
         choicebox.appendChild(listchoice);
     }
     choicebox.addEventListener("click", function () {
-        scoreAnswer(questions[i]);
+        scoreAnswer(randomQuestions[i]);
     })
     let previous = document.createElement("button");
     previous.setAttribute("id", "previous");
@@ -234,18 +251,18 @@ function showQuestion(i) {
     }
     let next = document.createElement("button");
     next.setAttribute("id", "next");
-    if(i == questions.length - 1){
+    if(i == randomQuestions.length - 1){
         next.textContent = "Submit";
     }else{
         next.textContent = "Next";
     }
     quiz.appendChild(next);
     previous.addEventListener("click", function () {
-        showQuestion(currentQuestion - 1);
+        showQuestion(currentQuestion - 1, randomQuestions);
         currentQuestion--;
     })
     next.addEventListener("click", function(){
-        showQuestion(currentQuestion + 1);
+        showQuestion(currentQuestion + 1, randomQuestions);
         currentQuestion++;
     })
 }

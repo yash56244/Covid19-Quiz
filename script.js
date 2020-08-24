@@ -116,10 +116,10 @@ var questionInterval;
 var currentQuestion = 0;
 var username;
 var highScore = document.getElementById("highScore");
+highScore.setAttribute("style", "background-color: white");
 var quizTimer = document.getElementById("quizTimer");
 var quiz = document.getElementById("quiz");
 var timerTable = document.getElementById("timer");
-var resp = document.getElementsByClassName("response")[0];
 
 function init() {
     clear();
@@ -130,7 +130,7 @@ function init() {
     quiz.appendChild(heading);
     let instructions = document.createElement("p");
     instructions.setAttribute("id", "instructions")
-    instructions.textContent = "If you answer correctly you will score points.";
+    instructions.textContent = "Scores are given on the basis of time required to answer a question.";
     quiz.appendChild(instructions);
     let nameLabel = document.createElement("label");
     nameLabel.setAttribute("for", "name");
@@ -138,8 +138,10 @@ function init() {
     let nameInput = document.createElement("input");
     nameInput.setAttribute("id", "name");
     nameInput.setAttribute("name", "name");
+    let lb = document.createElement("br");
     quiz.appendChild(nameLabel);
     quiz.appendChild(nameInput);
+    quiz.appendChild(lb);
     let startQuiz = document.createElement("button");
     startQuiz.setAttribute("id", "startQuiz");
     startQuiz.textContent = "Start Quiz!";
@@ -158,6 +160,7 @@ function clear() {
 
 function sidebar(randomQuestions) {
     var side = document.getElementById("sidebar");
+    side.className = "sb";
     side.style.visibility = "visible";
     for(let i = 0; i < questions.length; i++){
         let sideQuestion = document.createElement("li");
@@ -198,7 +201,6 @@ function startquiz(randomQuestions){
     quizDuration = questions.length * 10;
     startTimer();
     time();
-    resp.style.visibility = "visible";
     showQuestion(currentQuestion, randomQuestions);
 }
 
@@ -244,19 +246,10 @@ function showQuestion(i, randomQuestions) {
         endQuiz();
         return;
     }
-    if(randomQuestions[i].marked){
-        if(randomQuestions[i].correct){
-            document.getElementById("userResponse").textContent = "Correct";
-        }else{
-            document.getElementById("userResponse").textContent = "InCorrect";
-        }
-    }
-    else{
-        document.getElementById("userResponse").textContent = "Not Answered";
-    }
     let question = document.createElement("h1");
     question.setAttribute("question", randomQuestions[i].question);
-    question.textContent = randomQuestions[i].question;
+    question.setAttribute("id", "question")
+    question.textContent = "Q" +  eval(i + 1) + ". " + randomQuestions[i].question;
     quiz.appendChild(question);
     let choicebox = document.createElement("ul");
     choicebox.setAttribute("id", "choicebox");
@@ -266,9 +259,12 @@ function showQuestion(i, randomQuestions) {
         listchoice.setAttribute("choice-value", randomQuestions[i].choices[j]);
         listchoice.setAttribute("id","questionNum-" + j);
         listchoice.setAttribute("style", "list-style-type:none");
-        listchoice.textContent = randomQuestions[i].choices[j];
+        listchoice.textContent = j + 1 + ". " + randomQuestions[i].choices[j];
         if(randomQuestions[i].marked && randomQuestions[i].answer == randomQuestions[i].choices[j]){
             listchoice.setAttribute("style", "background-color: green; color: white");
+        }
+        if(randomQuestions[i].userAnswer == randomQuestions[i].choices[j] && randomQuestions[i].userAnswer != randomQuestions[i].answer){
+            listchoice.setAttribute("style", "background-color: red;");
         }
         choicebox.appendChild(listchoice);
     }
@@ -303,7 +299,7 @@ function showQuestion(i, randomQuestions) {
 function scoreAnswer(current) {
     var e = event.target;
     if(e.matches("li") && !current.marked){
-        let selectedItem = e.textContent;
+        let selectedItem = e.textContent.slice(3);
         if(selectedItem == current.answer){
             if(questionDuration < questionSecondElapsed + 1){
                 score += 0;
@@ -312,30 +308,32 @@ function scoreAnswer(current) {
             }
             document.getElementById("score").textContent = score;
             current.correct = true;
-            document.getElementById("userResponse").textContent = "Correct";
             document.getElementById(current.number).style.backgroundColor = "green";
+            document.getElementById(current.number).style.color = "white";
         }
         else{
-            document.getElementById("userResponse").textContent = "InCorrect";
             document.getElementById(current.number).style.backgroundColor = "red";
         }
         current.marked = true;
-        showAnswer(current);
+        current.userAnswer = selectedItem;
+        showAnswer(current, selectedItem);
     }
 }
 
-function showAnswer(current) {
+function showAnswer(current, selectedItem) {
     for(let i = 0; i < current.choices.length; i++){
         let questionid = "#questionNum-" + i;
         let questionrow = document.querySelector(questionid);
         if(current.choices[i] == current.answer){
             questionrow.setAttribute("style", "background-color: green; color: white");
         }
+        else if(selectedItem == current.choices[i]){
+            questionrow.setAttribute("style", "background-color: red");
+        }
     }
 }
 
 function refresh() {
-    console.log("saf")
     location.reload();
 }
 
@@ -343,7 +341,6 @@ function endQuiz(){
     stopTimer();
     clear();
     timerTable.style.visibility = "hidden";
-    resp.style.visibility = "hidden";
     var sidebar = document.getElementById("sidebar");
     sidebar.style.display = "none";
     let heading = document.createElement("p");
@@ -403,6 +400,8 @@ function stopTimer() {
 function highScores() {
     stopTimer();
     clear();
+    var sidebar = document.getElementById("sidebar");
+    sidebar.style.display = "none";
     timerTable.setAttribute("style", "visibility: hidden");
     let storedScores = JSON.parse(localStorage.getItem("quizScores"));
     let heading = document.createElement("h2");

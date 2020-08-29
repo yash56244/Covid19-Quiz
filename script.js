@@ -120,6 +120,7 @@ highScore.setAttribute("style", "background-color: white");
 var quizTimer = document.getElementById("quizTimer");
 var quiz = document.getElementById("quiz");
 var timerTable = document.getElementById("timer");
+var randomQuestions;
 
 function init() {
     clear();
@@ -148,7 +149,7 @@ function init() {
     quiz.appendChild(startQuiz);
     startQuiz.addEventListener("click", function(){
         username = nameInput.value;
-        var randomQuestions = rQuestions(questions);
+        randomQuestions = rQuestions(questions);
         sidebar(randomQuestions);
         startquiz(randomQuestions);
     })
@@ -331,6 +332,9 @@ function showAnswer(current, selectedItem) {
             questionrow.setAttribute("style", "background-color: red");
         }
     }
+    setTimeout(function() {
+        showQuestion(currentQuestion + 1, randomQuestions);
+    }, 1000);
 }
 
 function refresh() {

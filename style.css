@@ -1,0 +1,253 @@
+body{
+    user-select: none;
+    font-family: sans-serif;
+    min-height: 100vh;
+    background-size: 100px 50px;
+    background-image: radial-gradient(
+			circle at 100% 150%,
+			#3bc1ac 24%,
+			#42d2bb 25%,
+			#42d2bb 28%,
+			#3bc1ac 29%,
+			#3bc1ac 36%,
+			#42d2bb 36%,
+			#42d2bb 40%,
+			transparent 40%,
+			transparent
+		),
+		radial-gradient(
+			circle at 0 150%,
+			#3bc1ac 24%,
+			#42d2bb 25%,
+			#42d2bb 28%,
+			#3bc1ac 29%,
+			#3bc1ac 36%,
+			#42d2bb 36%,
+			#42d2bb 40%,
+			transparent 40%,
+			transparent
+		),
+		radial-gradient(
+			circle at 50% 100%,
+			#42d2bb 10%,
+			#3bc1ac 11%,
+			#3bc1ac 23%,
+			#42d2bb 24%,
+			#42d2bb 30%,
+			#3bc1ac 31%,
+			#3bc1ac 43%,
+			#42d2bb 44%,
+			#42d2bb 50%,
+			#3bc1ac 51%,
+			#3bc1ac 63%,
+			#42d2bb 64%,
+			#42d2bb 71%,
+			transparent 71%,
+			transparent
+		),
+		radial-gradient(
+			circle at 100% 50%,
+			#42d2bb 5%,
+			#3bc1ac 6%,
+			#3bc1ac 15%,
+			#42d2bb 16%,
+			#42d2bb 20%,
+			#3bc1ac 21%,
+			#3bc1ac 30%,
+			#42d2bb 31%,
+			#42d2bb 35%,
+			#3bc1ac 36%,
+			#3bc1ac 45%,
+			#42d2bb 46%,
+			#42d2bb 49%,
+			transparent 50%,
+			transparent
+		),
+		radial-gradient(
+			circle at 0 50%,
+			#42d2bb 5%,
+			#3bc1ac 6%,
+			#3bc1ac 15%,
+			#42d2bb 16%,
+			#42d2bb 20%,
+			#3bc1ac 21%,
+			#3bc1ac 30%,
+			#42d2bb 31%,
+			#42d2bb 35%,
+			#3bc1ac 36%,
+			#3bc1ac 45%,
+			#42d2bb 46%,
+			#42d2bb 49%,
+			transparent 50%,
+			transparent
+		);
+}
+#timer{
+    align-self: flex-end;
+}
+.quiz-container{
+    position: absolute;
+    width: 700px;
+    left: 50%;
+    transform: translate(-50%);
+    top: 25%;
+    z-index: 1;
+    padding: 2rem;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+}
+#sidebar{
+    text-align: center;
+    width: 160px;
+    padding: 0;
+    margin-left: 20px;
+}
+#sidebar li{
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    float: left;
+    font-size: 20px;
+    background-color: #ffc600;
+    padding: 10px 10px;
+    border: 1px solid white;
+    cursor: pointer;
+    border-radius: 50%;
+}
+#sidebar li:hover{
+    border: 1px solid black;
+}
+#next, #previous, #startQuiz{
+    font-family: "Pacifico", cursive;
+    text-decoration: none;
+    border: 0;
+    outline: none;
+    border-bottom: 5px solid #f3c010;
+    background: #ffc600;
+    color: black;
+    font-size: large;
+    padding: 10px 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+#next{
+    float: right;
+}
+#previous{
+    float: left;
+}
+#next:hover, #previous:hover, #startQuiz:hover{
+    background-color: black;
+    color: white;
+}
+#startQuiz{
+    margin-top: 10px;
+}
+#choicebox li{
+    border: 2px dotted transparent;
+    padding: 10px 5px;
+    margin-top: 10px;
+    font-size: 20px;
+    transition: 0.2s;
+}
+#choicebox li:hover{
+    border: 2px dotted black;
+}
+#highScore{
+    cursor: pointer;
+    font-size: 20px;
+    padding: 10px 10px;
+    width: max-content;
+    border: 1px solid black;
+    transition: 0.2s;
+}
+#highScore:hover{
+    transform: scale(1.1);
+}
+#choicebox, #question{
+    animation: anim ease-in 0.5s;
+}
+@keyframes anim{
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+#instructions, #heading, label{
+    font-size: 20px;
+}
+#name{
+    padding: 10px 10px;
+    border-radius: 10px;
+    outline: none;
+}
+.sb{
+    animation: sideanim ease-out 0.5s;
+}
+@keyframes sideanim{
+    from{
+        opacity: 0;
+        margin-left: 160px;
+    }
+    to{
+        opacity: 1;
+        margin-left: 20px;
+    }
+}
+@media (max-width: 1157px){
+    .quiz-container{
+        width: 500px;
+    }
+}
+@media (max-width: 960px){
+    #sidebar{
+        width: 110px;
+    }
+}
+@media (max-width: 852px){
+    .quiz-container{
+        top: 55%;
+    }
+    #sidebar{
+        width: 600px;
+    }
+}
+@media (max-width: 630px){
+    #sidebar{
+        width: 500px;
+    }
+}
+@media (max-width: 585px){
+    .quiz-container{
+        width: 400px;
+    }
+}
+@media (max-width: 530px){
+    .quiz-container{
+        width: 350px;
+        padding: 0;
+        margin-left: -10px;
+        top: 75%;
+    }
+    body{
+        width: 350px;
+    }
+    #sidebar{
+        margin-left: 0;
+        width: 400px;
+    }
+}
+@media (max-width: 400px){
+    .quiz-container{
+        top: 83%;
+    }
+}
+p{
+    font-size: 2rem;
+    border: 2px double black;
+    background-color: #ffc600;
+    padding: 5px 5px;
+}

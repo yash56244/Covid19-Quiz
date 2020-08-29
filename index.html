@@ -7,9 +7,9 @@
 </head>
 <body>
     <div class="header">
-        <!-- <div id="highScore">High Score</div> -->
-        <h1>Covid-19 Quiz</h1>
-        <table id="timer" style="visibility: hidden;">
+        <div id="highScore">High Score</div>
+        <center><h1 style="font-size: 4rem;	font-weight: 100;font-family: cursive;margin-top: 0; background-color: aquamarine; width: fit-content;padding: 5px;">Covid-19 Quiz</h1></center>
+        <table id="timer" style="visibility: hidden; font-size: 1.5rem;background-color: #f3c010;">
             <tr>
                 <td>Time left : </td>
                 <td><span id="quizTimer"></span></td>
@@ -21,9 +21,9 @@
         </table>
     </div>
     <div class="container">
-        <section id="quiz"></section>
-        <div class="response" style="visibility: hidden;">
-            <p>Your Response : <span id="userResponse"></span></p>
+        <ul id="sidebar" style="visibility: hidden;"></ul>
+        <div class="quiz-container">
+            <section id="quiz"></section><br><hr style="background-color: black;">
         </div>
     </div>
     <script src="script.js"></script>
